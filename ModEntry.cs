@@ -9,7 +9,7 @@ namespace SkullCavernToggle
     public class ModEntry
         : Mod
     {
-        private readonly NetWorldState state = new NetWorldState();
+        //private readonly NetWorldState state = new NetWorldState();
 
         private ModConfig config;
 
@@ -48,18 +48,19 @@ namespace SkullCavernToggle
             {
                 // Yes, toggle difficulty
 
-                if(state.SkullCavesDifficulty == 1)
+                if (Game1.netWorldState.Value.SkullCavesDifficulty == 1)
                 {
-                    state.SkullCavesDifficulty = 0;
+                    Game1.netWorldState.Value.SkullCavesDifficulty = 0;
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
+
                 }
                 else
                 {
-                    state.SkullCavesDifficulty = 1;
+                    Game1.netWorldState.Value.SkullCavesDifficulty = 1;
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to hard", null));
+
                 }
-               
-                Game1.netWorldState.Set(state);
+
             }
 
             else if(e.Button == SButton.Z && ShouldToggle() == false && Context.IsWorldReady == true)
