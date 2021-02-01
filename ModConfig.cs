@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
 
-namespace DifficultyToggle
+namespace SkullCavernToggle
 {
     internal class ModConfig
     {

@@ -1,9 +1,9 @@
 ﻿{
-	"Name":"Difficulty Toggle",
+	"Name":"Skull Cavern Toggle",
 	"Author":"TheMightyAmondee",
 	"Version":"1.0.0",
-	"Description":"Toggles SC difficulty",
-	"UniqueID": "TheMightyAmondee.DifficultyToggle",
+	"Description":"Toggles Skull Cavern difficulty",
+	"UniqueID": "TheMightyAmondee.SkullCavernToggle",
 	"EntryDll":"DifficultyToggle.dll",
 	"MinimumApiVersion":"3.8.0",
 	"UpdateKeys":[]

@@ -4,12 +4,12 @@ using StardewValley.Network;
 using StardewValley;
 using System.Collections.Generic;
 
-namespace DifficultyToggle
+namespace SkullCavernToggle
 {
     public class ModEntry
         : Mod
     {
-        readonly NetWorldState state = new NetWorldState();
+        private readonly NetWorldState state = new NetWorldState();
 
         private ModConfig config;
 
@@ -43,7 +43,9 @@ namespace DifficultyToggle
         // Toggle difficulty
         private void Toggle(object sender, ButtonPressedEventArgs e)
         {                       
-            if (e.Button == this.config.ToggleDifficulty && ShouldToggle() == true)
+            if (e.Button == this.config.ToggleDifficulty 
+                //&& ShouldToggle() == true 
+                && Context.IsWorldReady == true)
             {
                 if(state.SkullCavesDifficulty == 1)
                 {
@@ -59,7 +61,9 @@ namespace DifficultyToggle
                 Game1.addHUDMessage(new HUDMessage("Skull Cavern Difficulty toggled", null));
                 Game1.netWorldState.Set(state);
             }
-            else if(e.Button == SButton.Z && ShouldToggle() == false)
+            else if(e.Button == SButton.Z 
+                //&& ShouldToggle() == false 
+                && Context.IsWorldReady == true)
             {
                 Game1.addHUDMessage(new HUDMessage("Skull Cavern Difficulty can't be toggled now", 3));
             }
