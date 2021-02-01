@@ -9,7 +9,6 @@ namespace SkullCavernToggle
     public class ModEntry
         : Mod
     {
-        //private readonly NetWorldState state = new NetWorldState();
 
         private ModConfig config;
 
