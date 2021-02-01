@@ -6,5 +6,5 @@
 	"UniqueID": "TheMightyAmondee.SkullCavernToggle",
 	"EntryDll":"DifficultyToggle.dll",
 	"MinimumApiVersion":"3.8.0",
-	"UpdateKeys":[]
+	"UpdateKeys":["Nexus:7908"]
 }
