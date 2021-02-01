@@ -43,27 +43,25 @@ namespace SkullCavernToggle
         // Toggle difficulty
         private void Toggle(object sender, ButtonPressedEventArgs e)
         {                       
-            if (e.Button == this.config.ToggleDifficulty 
-                //&& ShouldToggle() == true 
-                && Context.IsWorldReady == true)
+            if (e.Button == this.config.ToggleDifficulty && ShouldToggle() == true && Context.IsWorldReady == true)
             {
                 if(state.SkullCavesDifficulty == 1)
                 {
                     state.SkullCavesDifficulty = 0;
                     this.Monitor.Log($"Difficulty:{state.skullCavesDifficulty}");
+                    Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
                 }
                 else
                 {
                     state.SkullCavesDifficulty = 1;
                     this.Monitor.Log($"Difficulty:{state.skullCavesDifficulty}");
+                    Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to hard", null));
                 }
 
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern Difficulty toggled", null));
+                
                 Game1.netWorldState.Set(state);
             }
-            else if(e.Button == SButton.Z 
-                //&& ShouldToggle() == false 
-                && Context.IsWorldReady == true)
+            else if(e.Button == SButton.Z && ShouldToggle() == false && Context.IsWorldReady == true)
             {
                 Game1.addHUDMessage(new HUDMessage("Skull Cavern Difficulty can't be toggled now", 3));
             }
