@@ -42,28 +42,39 @@ namespace SkullCavernToggle
 
         // Toggle difficulty
         private void Toggle(object sender, ButtonPressedEventArgs e)
-        {                       
+        {
+            // Has correct button been pushed, conditions for toggle been met and world is ready?
             if (e.Button == this.config.ToggleDifficulty && ShouldToggle() == true && Context.IsWorldReady == true)
             {
+                // Yes, toggle difficulty
+
                 if(state.SkullCavesDifficulty == 1)
                 {
                     state.SkullCavesDifficulty = 0;
-                    this.Monitor.Log($"Difficulty:{state.skullCavesDifficulty}");
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
                 }
                 else
                 {
                     state.SkullCavesDifficulty = 1;
-                    this.Monitor.Log($"Difficulty:{state.skullCavesDifficulty}");
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to hard", null));
                 }
-
-                
+               
                 Game1.netWorldState.Set(state);
             }
+
             else if(e.Button == SButton.Z && ShouldToggle() == false && Context.IsWorldReady == true)
             {
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern Difficulty can't be toggled now", 3));
+                // No, display message to say difficulty can't be toggled
+
+                if (Game1.player.team.SpecialOrderActive("QiChallenge10") == true)
+                {
+                    Game1.addHUDMessage(new HUDMessage("Skull Cavern Invasion is active", 3));
+                }
+
+                else
+                {
+                    Game1.addHUDMessage(new HUDMessage("Skull Cavern Invasion not completed", 3));
+                }               
             }
         }
     }
