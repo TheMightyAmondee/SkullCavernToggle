@@ -62,7 +62,7 @@ namespace SkullCavernToggle
 
             }
 
-            else if(e.Button == SButton.Z && ShouldToggle() == false && Context.IsWorldReady == true)
+            else if(e.Button == this.config.ToggleDifficulty && ShouldToggle() == false && Context.IsWorldReady == true)
             {
                 // No, display message to say difficulty can't be toggled
 
