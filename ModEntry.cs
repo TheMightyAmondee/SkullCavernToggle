@@ -1,6 +1,6 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewValley.Network;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 using System.Collections.Generic;
 
@@ -43,7 +43,7 @@ namespace SkullCavernToggle
         private void Toggle(object sender, ButtonPressedEventArgs e)
         {
             // Has correct button been pushed, conditions for toggle been met and world is ready?
-            if (e.Button == this.config.ToggleDifficulty && ShouldToggle() == true && Context.IsWorldReady == true)
+            if (this.config.ToggleDifficulty.JustPressed() == true && ShouldToggle() == true && Context.IsWorldReady == true)
             {
                 // Yes, toggle difficulty
 
@@ -62,7 +62,7 @@ namespace SkullCavernToggle
 
             }
 
-            else if(e.Button == this.config.ToggleDifficulty && ShouldToggle() == false && Context.IsWorldReady == true)
+            else if(this.config.ToggleDifficulty.JustPressed() == true && ShouldToggle() == false && Context.IsWorldReady == true)
             {
                 // No, display message to say difficulty can't be toggled
 

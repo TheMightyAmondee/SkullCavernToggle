@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StardewModdingAPI;
+using StardewModdingAPI.Utilities;
 
 namespace SkullCavernToggle
 {
     internal class ModConfig
     {
-        public SButton ToggleDifficulty { get; set; } = SButton.Z;
+        public KeybindList ToggleDifficulty { get; set; } = KeybindList.Parse("Z");
     }
 }
