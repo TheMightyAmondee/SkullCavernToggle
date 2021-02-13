@@ -28,15 +28,10 @@ namespace SkullCavernToggle
                 return false;
             }
 
-            foreach (string soid in new List<string>(order.Keys))
+            else
             {
-                if (soid.Contains("QiChallenge10") == true)
-                {
-                    return true;
-                }
+                return true;
             }
-
-            return false;
         }
 
         // Toggle difficulty
@@ -47,7 +42,7 @@ namespace SkullCavernToggle
             {
                 // Yes, toggle difficulty
 
-                if (Game1.netWorldState.Value.SkullCavesDifficulty == 1)
+                if (Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                 {
                     Game1.netWorldState.Value.SkullCavesDifficulty = 0;
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
@@ -66,15 +61,8 @@ namespace SkullCavernToggle
             {
                 // No, display message to say difficulty can't be toggled
 
-                if (Game1.player.team.SpecialOrderActive("QiChallenge10") == true)
-                {
-                    Game1.addHUDMessage(new HUDMessage("Skull Cavern Invasion is active", 3));
-                }
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern Invasion is active", 3));
 
-                else
-                {
-                    Game1.addHUDMessage(new HUDMessage("Skull Cavern Invasion not completed", 3));
-                }               
             }
         }
     }
