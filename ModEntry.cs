@@ -47,7 +47,7 @@ namespace SkullCavernToggle
             {
                 // Yes, toggle difficulty
 
-                if (Game1.netWorldState.Value.SkullCavesDifficulty == 1)
+                if (Game1.netWorldState.Value.SkullCavesDifficulty > 1)
                 {
                     Game1.netWorldState.Value.SkullCavesDifficulty = 0;
                     Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
