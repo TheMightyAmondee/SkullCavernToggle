@@ -7,8 +7,8 @@
     <ProjectGuid>{5182A484-7CFF-4026-898E-0839010A5B57}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DifficultyToggle</RootNamespace>
-    <AssemblyName>DifficultyToggle</AssemblyName>
+    <RootNamespace>SkullCavernToggle</RootNamespace>
+    <AssemblyName>SkullCavernToggle</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
