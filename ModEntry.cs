@@ -1,8 +1,13 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewModdingAPI.Utilities;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using StardewValley;
 using System.Collections.Generic;
+using xTile.ObjectModel;
+using xTile.Tiles;
+using xTile.Layers;
+
 
 namespace SkullCavernToggle
 {
@@ -15,8 +20,39 @@ namespace SkullCavernToggle
         public override void Entry(IModHelper helper)
         {
             helper.Events.Input.ButtonPressed += this.Toggle;
+            helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
             this.config = helper.ReadConfig<ModConfig>();
         }
+
+
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            string tilesheetPath = this.Helper.Content.GetActualAssetKey("temp.png", ContentSource.ModFolder);
+          
+            GameLocation location = Game1.getLocationFromName("SkullCave");
+          
+            location.removeTile(2, 3, "Front");
+            //location.removeTile(2, 4, "Buildings");
+
+            TileSheet tilesheet = new TileSheet(
+                  id: "z_shrine_tilesheet",
+                  map: location.map,
+                  imageSource: tilesheetPath,
+                  sheetSize: new xTile.Dimensions.Size(16, 48),
+                  tileSize: new xTile.Dimensions.Size(16, 16)
+               );
+            location.map.AddTileSheet(tilesheet);
+            location.map.LoadTileSheets(Game1.mapDisplayDevice);
+
+            Layer layer = location.map.GetLayer("Front");
+            layer.Tiles[2, 3] = new StaticTile(layer, tilesheet, BlendMode.Alpha, 0);
+
+            int index = location.map.TileSheets.IndexOf(tilesheet);
+
+            location.setMapTileIndex(2, 3, 0, "Buildings", index);
+            location.setMapTile(2, 3, 0, "Buildings", "Dialogue hello", index);
+        }
+
 
         // Don't toggle if special order hasn't been completed or is active
         private bool ShouldToggle()
