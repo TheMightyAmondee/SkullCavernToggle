@@ -16,43 +16,27 @@ namespace SkullCavernToggle
 
         private ModConfig config;
 
+        public static Shrine Shrine { get; private set; } = new Shrine();
+
         public override void Entry(IModHelper helper)
         {
             helper.Events.Input.ButtonPressed += this.Toggle;
-            helper.Events.GameLoop.SaveLoaded += this.OnSaveLoaded;
+            helper.Events.Player.Warped += this.OnWarp;
+
             this.config = helper.ReadConfig<ModConfig>();
         }
 
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        // Apply shrine tiles when player is in the correct location
+        private void OnWarp(object sender, WarpedEventArgs e)
         {
-            string tilesheetPath = this.Helper.Content.GetActualAssetKey("temp.png", ContentSource.ModFolder);
-          
-            GameLocation location = Game1.getLocationFromName("SkullCave");
-          
-            location.removeTile(2, 3, "Front");
-            //location.removeTile(2, 4, "Buildings");
-
-            TileSheet tilesheet = new TileSheet(
-                  id: "z_shrine_tilesheet",
-                  map: location.map,
-                  imageSource: tilesheetPath,
-                  sheetSize: new xTile.Dimensions.Size(16, 48),
-                  tileSize: new xTile.Dimensions.Size(16, 16)
-               );
-            location.map.AddTileSheet(tilesheet);
-            location.map.LoadTileSheets(Game1.mapDisplayDevice);
-
-            Layer layer = location.map.GetLayer("Front");
-            layer.Tiles[2, 3] = new StaticTile(layer, tilesheet, BlendMode.Alpha, 0);
-
-            int index = location.map.TileSheets.IndexOf(tilesheet);
-
-            location.setMapTileIndex(2, 3, 0, "Buildings", index);
-            location.setMapTile(2, 3, 0, "Buildings", "Nothing", index);
+            if(e.NewLocation.NameOrUniqueName == "SkullCave" && ShowShrine() == true)
+            {
+                Shrine.ApplyTiles(this.Helper);
+            }            
         }
 
 
-        // Don't toggle if special order hasn't been completed or is active
+        // Are the toggle conditions met?
         private bool ShouldToggle()
         {
             var order = Game1.player.team.completedSpecialOrders;
@@ -72,6 +56,7 @@ namespace SkullCavernToggle
                     }
                 }
             }
+
             else
             {
                 return true;
@@ -79,23 +64,83 @@ namespace SkullCavernToggle
 
             return false;
         }
+
+        // Should the shrine be added to the map?
+        private bool ShowShrine()
+        {
+            // Is shrine toggle being used?
+            if(this.config.ShrineToggle == true)
+            {
+                // Yes, check if the conditions are met
+
+                // Get completed orders
+                var order = Game1.player.team.completedSpecialOrders;
+
+                // Must the quest be completed first?
+                if (this.config.MustCompleteQuest == true)
+                {
+                    // Yes, is it complete?
+
+                    // Iterate through completed orders
+                    foreach (string soid in new List<string>(order.Keys))
+                    {
+                        
+                        if (soid.Contains("QiChallenge10") == true)
+                        {
+                            // Yes, order complete, add shrine
+                            return true;
+                        }
+
+                        else
+                        {
+                            // No, order not complete, don't add shrine
+                            return false;
+                        }
+                    }
+                }
+
+                else
+                {
+                    // No, quest is not a condition, add the shrine
+                    return true;
+                }
+                
+            }
+
+            // No, key toggle is used, shrine should not be placed
+
+            return false;            
+        }
+
+        // Toggle difficulty after confirmation
         private void ShrineMenu(int difficulty)
         {
+            // Toggle accordingly
             if(difficulty > 0)
             {
+                // Normal
                 Game1.netWorldState.Value.SkullCavesDifficulty = 0;
+
             }
             else
             {
+                // Dangerous
                 Game1.netWorldState.Value.SkullCavesDifficulty = 1;
             }
 
+            // Fix shrine appearance for new difficulty
+            Shrine.ApplyTiles(this.Helper);
+            // Exit confirmation box
             Game1.exitActiveMenu();
+            // Play sound cue
+            Game1.playSound("serpentDie");
+            // Show message to confirm toggle
+            Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled", null));
         }
-        // Toggle difficulty
+
+        // Toggle difficulty using button
         private void Toggle(object sender, ButtonPressedEventArgs e)
         {
-            // Using button
             if(this.config.ToggleDifficulty.JustPressed() == true && this.config.ShrineToggle == false)
             {
                 // Has correct button been pushed, conditions for toggle been met and world is ready?
@@ -135,20 +180,31 @@ namespace SkullCavernToggle
             }
 
             // Using shrine
-            else if(e.Button == SButton.MouseRight && Game1.currentLocation.NameOrUniqueName == "SkullCave" && Game1.player.canMove == true && this.config.ShrineToggle == true)
+            else if(e.Button == SButton.MouseRight && Game1.currentLocation.NameOrUniqueName == "SkullCave" && Game1.player.canMove == true && ShowShrine() == true)
             {
-                if(e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 3)
+                // If player clicks this location (shrine) display the appropriate response
+                if((e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 2) || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 3) || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 4))
                 {
                     if(ShouldToggle() == true)
                     {
                         if(Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                         {
-                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern difficulty to normal?", (ConfirmationDialog.behavior)(_ => ShrineMenu(1)), null);
+                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern to normal?", (ConfirmationDialog.behavior)(_ => ShrineMenu(1)), null);
                         }
                         else
                         {
-                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern difficulty to dangerous?", (ConfirmationDialog.behavior)(_ => ShrineMenu(0)), null);
+                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern to dangerous?", (ConfirmationDialog.behavior)(_ => ShrineMenu(0)), null);
                         }                       
+                    }
+
+                    else if(ShouldToggle() == false && Game1.player.team.SpecialOrderActive("QiChallenge10") == true)
+                    {
+                        Game1.activeClickableMenu = new DialogueBox("Looks like Skull Cavern Invasion is active... I can't toggle right now.");
+                    }
+
+                    else
+                    {
+                        Game1.activeClickableMenu = new DialogueBox("You haven't completed Skull Cavern Invasion... I don't think you can handle this yet.");
                     }
                     
                 }
