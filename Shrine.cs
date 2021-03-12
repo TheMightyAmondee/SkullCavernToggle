@@ -2,27 +2,27 @@
 using StardewModdingAPI.Events;
 using StardewValley.Menus;
 using StardewValley;
-using System.Collections.Generic;
-using xTile.Tiles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using StardewValley.Characters;
+using xTile.Dimensions;
 using xTile.Layers;
+using xTile.Tiles;
 
 namespace SkullCavernToggle
 {
-    public class Shrine
+    public class Shrine 
+        : GameLocation
     {
+        private static Shrine shrine { get; set; } = new Shrine();
         // Apply shrine tiles to map
         public void ApplyTiles(IModHelper helper)
         {
             // Get tilesheet pathway
-            string tilesheetPath = helper.Content.GetActualAssetKey("assets\\temp2.png", ContentSource.ModFolder);
+            string tilesheetPath = helper.Content.GetActualAssetKey("assets\\snake_shrine.png", ContentSource.ModFolder);
 
             // Get skullcave location
             GameLocation location = Game1.getLocationFromName("SkullCave");
-
-            // Remove tiles where shrine will go
-            location.removeTile(2, 3, "Buildings");
-            location.removeTile(2, 2, "Front");
-            location.removeTile(2, 4, "Buildings");
 
             // Get tilesheet from pathway
             TileSheet tilesheet = new TileSheet(
@@ -61,7 +61,7 @@ namespace SkullCavernToggle
             int index = location.map.TileSheets.IndexOf(tilesheet);
 
             location.setMapTileIndex(2, 3, 0, "Buildings", index);
-            location.setMapTile(2, 3, 0, "Buildings", "Nothing", index);
+            location.setMapTile(2, 3, 0, "Buildings", "SnakeShrine", index);
         }
     }
 }

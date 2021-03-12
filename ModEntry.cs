@@ -3,6 +3,9 @@ using StardewModdingAPI.Events;
 using StardewValley.Menus;
 using StardewValley;
 using System.Collections.Generic;
+using xTile.Tiles;
+using xTile.Layers;
+using xTile.Dimensions;
 
 
 
@@ -23,6 +26,8 @@ namespace SkullCavernToggle
 
             this.config = helper.ReadConfig<ModConfig>();
         }
+
+
 
         // Apply shrine tiles when player is in the correct location and shrine should be shown
         private void OnWarp(object sender, WarpedEventArgs e)
@@ -118,24 +123,25 @@ namespace SkullCavernToggle
             }
 
             // No, key toggle is used, shrine should not be placed
-
             return false;            
         }
 
         // Toggle difficulty after confirmation
-        private void ShrineMenu(int difficulty)
+        public void ShrineMenu(int difficulty)
         {
             // Toggle accordingly
             if (difficulty > 0)
             {
                 // Normal
                 Game1.netWorldState.Value.SkullCavesDifficulty = 0;
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
 
             }
             else
             {
                 // Dangerous
                 Game1.netWorldState.Value.SkullCavesDifficulty = 1;
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
             }
 
             // Fix shrine appearance for new difficulty
@@ -144,10 +150,9 @@ namespace SkullCavernToggle
             Game1.exitActiveMenu();
             // Play sound cue
             Game1.playSound("serpentDie");
-            // Show message to confirm toggle
-            Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled", null));
 
-            // Log new difficulty
+
+            // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
             this.Monitor.Log("Skull Cavern Difficulty: " + Game1.netWorldState.Value.SkullCavesDifficulty, LogLevel.Trace);
             Game1.performTenMinuteClockUpdate();
             Multiplayer message = new Multiplayer();
@@ -167,18 +172,19 @@ namespace SkullCavernToggle
 
                     if (Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                     {
+                        // Normal
                         Game1.netWorldState.Value.SkullCavesDifficulty = 0;
                         Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
 
                     }
                     else
                     {
+                        // Dangerous
                         Game1.netWorldState.Value.SkullCavesDifficulty = 1;
                         Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
-
                     }
 
-                    // Log new difficulty
+                    // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
                     this.Monitor.Log("Skull Cavern Difficulty: " + Game1.netWorldState.Value.SkullCavesDifficulty, LogLevel.Trace);
                     Game1.performTenMinuteClockUpdate();
 
@@ -203,12 +209,24 @@ namespace SkullCavernToggle
             }
 
             // Using shrine
-            else if (e.Button == SButton.MouseRight && Game1.currentLocation.NameOrUniqueName == "SkullCave" && Game1.player.canMove == true && ShowShrine() == true)
+            else if (true && 
+                (false
+                // Correct button is pressed
+                || e.Button == SButton.MouseRight 
+                || e.Button == SButton.ControllerA)
+                // Correct location
+                && Game1.currentLocation.NameOrUniqueName == "SkullCave"
+                // Player can move
+                && Game1.player.canMove == true
+                // Shrine is showing
+                && ShowShrine() == true)
             {
                 // If player clicks this location (shrine) display the appropriate response
-                if ((e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 2) || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 3) || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 4))
-                {
-
+                if (false
+                    || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 2) 
+                    || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 3) 
+                    || (e.Cursor.GrabTile.X == 2 && e.Cursor.GrabTile.Y == 4))
+                {                   
                     if (ShouldToggle() == true)
                     {
                         if(Game1.netWorldState.Value.SkullCavesDifficulty > 0)
@@ -218,7 +236,7 @@ namespace SkullCavernToggle
                         else
                         {
                             Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern to dangerous?", (ConfirmationDialog.behavior)(_ => ShrineMenu(0)), null);
-                        }                       
+                        }
                     }
 
                     else if (ShouldToggle() == false && Game1.player.team.SpecialOrderActive("QiChallenge10") == true)
@@ -237,8 +255,7 @@ namespace SkullCavernToggle
         }        
 
         private void MessageReceived(object sender, ModMessageReceivedEventArgs e)
-        {
-            
+        {            
             if (e.FromModID == this.ModManifest.UniqueID && e.Type == "Toggled")
             {
 
