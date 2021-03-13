@@ -1,10 +1,5 @@
 ﻿using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewValley.Menus;
 using StardewValley;
-
-using StardewValley.Characters;
-using xTile.Dimensions;
 using xTile.Layers;
 using xTile.Tiles;
 

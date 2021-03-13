@@ -3,12 +3,6 @@ using StardewModdingAPI.Events;
 using StardewValley.Menus;
 using StardewValley;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using xTile.Tiles;
-using xTile.Layers;
-using xTile.Dimensions;
-
 
 
 namespace SkullCavernToggle
