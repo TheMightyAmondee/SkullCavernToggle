@@ -105,12 +105,6 @@ namespace SkullCavernToggle
                             // Yes, order complete, add shrine
                             return true;
                         }
-
-                        else
-                        {
-                            // No, order not complete, don't add shrine
-                            return false;
-                        }
                     }
                 }
 
@@ -147,7 +141,7 @@ namespace SkullCavernToggle
             // Fix shrine appearance for new difficulty
             Shrine.ApplyTiles(this.Helper);
             // Exit confirmation box
-            Game1.exitActiveMenu();
+            //Game1.exitActiveMenu();
             // Play sound cue
             Game1.playSound("serpentDie");
 
@@ -229,13 +223,27 @@ namespace SkullCavernToggle
                 {                   
                     if (ShouldToggle() == true)
                     {
-                        if(Game1.netWorldState.Value.SkullCavesDifficulty > 0)
+                        GameLocation location = Game1.currentLocation;
+                       
+                        if (Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                         {
-                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern to normal?", (ConfirmationDialog.behavior)(_ => ShrineMenu(1)), null);
+                            location.createQuestionDialogue("--Shrine Of Greater Challenge--^Summon an ancient magi-seal protection, returning the Skull Cavern to it's original state?", location.createYesNoResponses(), delegate (Farmer _, string answer)
+                            {
+                                if (answer == "Yes")
+                                {
+                                    ShrineMenu(1);
+                                }
+                            });
                         }
                         else
                         {
-                            Game1.activeClickableMenu = new ConfirmationDialog("Toggle Skull Cavern to dangerous?", (ConfirmationDialog.behavior)(_ => ShrineMenu(0)), null);
+                            location.createQuestionDialogue("--Shrine Of Greater Challenge--^Dispel the ancient magi-seal of protection, allowing powerful monsters to enter the cavern?", location.createYesNoResponses(), delegate (Farmer _, string answer)
+                            {
+                                if (answer == "Yes")
+                                {
+                                    ShrineMenu(0);
+                                }
+                            });                            
                         }
                     }
 
