@@ -2,8 +2,7 @@
 using StardewModdingAPI.Events;
 using StardewValley.Menus;
 using StardewValley;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+
 using StardewValley.Characters;
 using xTile.Dimensions;
 using xTile.Layers;
@@ -14,9 +13,8 @@ namespace SkullCavernToggle
     public class Shrine 
         : GameLocation
     {
-        private static Shrine shrine { get; set; } = new Shrine();
         // Apply shrine tiles to map
-        public void ApplyTiles(IModHelper helper)
+        public void ApplyTiles(IModHelper helper, bool multiplayerpatch = false)
         {
             // Get tilesheet pathway
             string tilesheetPath = helper.Content.GetActualAssetKey("assets\\snake_shrine.png", ContentSource.ModFolder);
@@ -44,13 +42,30 @@ namespace SkullCavernToggle
             // Which snake head to use
             if (Game1.netWorldState.Value.SkullCavesDifficulty == 0)
             {
-                // Normal state, yellow eyes
-                frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 0);
+                if (multiplayerpatch == true)
+                {
+                    // Dangerous state, red eyes
+                    frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 48);
+                }
+                else
+                {
+                    // Normal state, yellow eyes
+                    frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 0);
+                }
+
             }
             else
             {
-                // Dangerous state, red eyes
-                frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 48);
+                if (multiplayerpatch == true)
+                {
+                    // Normal state, yellow eyes
+                    frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 0);
+                }
+                else
+                {
+                    // Dangerous state, red eyes 
+                    frontlayer.Tiles[2, 2] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 48);
+                }
             }
             
             // Apply other tiles for shrine
