@@ -1,15 +1,34 @@
-﻿using StardewModdingAPI;
+﻿using System;
+using StardewModdingAPI;
 using StardewValley;
 using xTile.Layers;
+using xTile.Dimensions;
+using Harmony;
 using xTile.Tiles;
 
 namespace SkullCavernToggle
 {
     public class Shrine 
-        : GameLocation
     {
+        private static IMonitor monitor;
+        private static IModHelper helper;
+        private static IManifest manifest;
+
+        public static void GetHelpers(IMonitor monitor, IModHelper helper, IManifest manifest)
+        {
+            Shrine.monitor = monitor;
+            Shrine.helper = helper;
+            Shrine.manifest = manifest;
+        }
+        public static void Hook(HarmonyInstance harmony, IMonitor monitor)
+        {
+            harmony.Patch(
+                original: AccessTools.Method(typeof(GameLocation), nameof(GameLocation.performAction)),
+                postfix: new HarmonyMethod(typeof(Shrine), nameof(Shrine.performAction_PostFix))
+                );
+        }
         // Apply shrine tiles to map
-        public void ApplyTiles(IModHelper helper, bool multiplayerpatch = false)
+        public static void ApplyTiles(IModHelper helper, bool multiplayerpatch = false)
         {
             // Get tilesheet pathway
             string tilesheetPath = helper.Content.GetActualAssetKey("assets\\snake_shrine.png", ContentSource.ModFolder);
@@ -72,6 +91,62 @@ namespace SkullCavernToggle
 
             location.setMapTileIndex(2, 3, 0, "Buildings", index);
             location.setMapTile(2, 3, 0, "Buildings", "SnakeShrine", index);
+        }
+
+        public static void performAction_PostFix(GameLocation __instance, string action, Farmer who, Location tileLocation)
+        {
+            try
+            {
+                if (action != null && who.IsLocalPlayer && action == "SnakeShrine")
+                {
+                    GameLocation location = Game1.currentLocation;
+                    if (Game1.netWorldState.Value.SkullCavesDifficulty > 0)
+                    {                        
+                        location.createQuestionDialogue("--Shrine Of Greater Challenge--^Summon an ancient magi-seal protection, returning the Skull Cavern to it's original state?", location.createYesNoResponses(), delegate (Farmer _, string answer)
+                        {
+                            if (answer == "Yes")
+                            {
+                                // Normal
+                                Game1.netWorldState.Value.SkullCavesDifficulty = 0;
+                                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
+                                Game1.playSound("serpentDie");
+                                Shrine.ApplyTiles(helper);
+
+                                // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
+                                monitor.Log("Skull Cavern Difficulty: " + Game1.netWorldState.Value.SkullCavesDifficulty, LogLevel.Trace);
+                                Multiplayer message = new Multiplayer();
+                                helper.Multiplayer.SendMessage(message, "Toggled", modIDs: new[] { manifest.UniqueID });
+                            }
+                        });
+                    }
+
+                    else
+                    {
+                        location.createQuestionDialogue("--Shrine Of Greater Challenge--^Dispel the ancient magi-seal of protection, allowing powerful monsters to enter the cavern?", location.createYesNoResponses(), delegate (Farmer _, string answer)
+                        {
+                            if (answer == "Yes")
+                            {
+                                // Dangerous
+                                Game1.netWorldState.Value.SkullCavesDifficulty = 1;
+                                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
+                                Game1.playSound("serpentDie");
+                                Shrine.ApplyTiles(helper);
+
+                                // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
+                                monitor.Log("Skull Cavern Difficulty: " + Game1.netWorldState.Value.SkullCavesDifficulty, LogLevel.Trace);
+                                Multiplayer message = new Multiplayer();
+                                helper.Multiplayer.SendMessage(message, "Toggled", modIDs: new[] { manifest.UniqueID });
+                            }
+                        });
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                monitor.Log("Failed to patch", LogLevel.Error);
+                throw new System.Exception("Failed to patch method", e);
+            }
+           
         }
     }
 }

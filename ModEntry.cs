@@ -1,6 +1,7 @@
 ﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley.Menus;
+using Harmony;
 using StardewValley;
 using System.Collections.Generic;
 
@@ -21,6 +22,14 @@ namespace SkullCavernToggle
             helper.Events.Multiplayer.ModMessageReceived += this.MessageReceived;
 
             this.config = helper.ReadConfig<ModConfig>();
+
+            Shrine.GetHelpers(this.Monitor,this.Helper,this.ModManifest);
+
+            if (this.config.ShrineToggle == true)
+            {
+                var harmony = HarmonyInstance.Create(this.ModManifest.UniqueID);
+                Shrine.Hook(harmony, this.Monitor);
+            }
         }
 
 
@@ -116,35 +125,7 @@ namespace SkullCavernToggle
             return false;            
         }
 
-        // Toggle difficulty after confirmation
-        public void ShrineMenu(int difficulty)
-        {
-            // Toggle accordingly
-            if (difficulty > 0)
-            {
-                // Normal
-                Game1.netWorldState.Value.SkullCavesDifficulty = 0;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
-
-            }
-            else
-            {
-                // Dangerous
-                Game1.netWorldState.Value.SkullCavesDifficulty = 1;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
-            }
-
-            // Fix shrine appearance for new difficulty
-            Shrine.ApplyTiles(this.Helper);
-            // Play sound cue
-            Game1.playSound("serpentDie");
-
-
-            // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
-            this.Monitor.Log("Skull Cavern Difficulty: " + Game1.netWorldState.Value.SkullCavesDifficulty, LogLevel.Trace);
-            Multiplayer message = new Multiplayer();
-            this.Helper.Multiplayer.SendMessage(message, "Toggled", modIDs: new[] { this.ModManifest.UniqueID });
-        }
+        
 
         // Toggle difficulty using button/key
         private void Toggle(object sender, ButtonPressedEventArgs e)
@@ -194,6 +175,7 @@ namespace SkullCavernToggle
                 }
             }
 
+            /*
             // Using shrine
             else if (true && 
                 (false
@@ -255,7 +237,7 @@ namespace SkullCavernToggle
                     
                 }
             }
-            
+           */ 
         }        
 
         private void MessageReceived(object sender, ModMessageReceivedEventArgs e)
