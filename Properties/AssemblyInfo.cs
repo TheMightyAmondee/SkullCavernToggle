@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("SkullCavernToggle")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("TheMightAMondee")]
+[assembly: AssemblyCompany("TheMightyAmondee")]
 [assembly: AssemblyProduct("SkullCavernToggle")]
 [assembly: AssemblyCopyright("Copyright © Amelie Parkinson-Bates 2021")]
 [assembly: AssemblyTrademark("")]
