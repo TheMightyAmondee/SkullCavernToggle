@@ -54,7 +54,7 @@ namespace SkullCavernToggle
                 // Yes, is it complete?
 
                 // Iterate through completed quests
-                foreach (string soid in new List<string>(order.Keys))
+                foreach (string soid in new List<string>(order))
                 {
                     // Is quest part of the collection?
                     if (soid.Contains("QiChallenge10") == true)
@@ -93,7 +93,7 @@ namespace SkullCavernToggle
                     // Yes, is it complete?
 
                     // Iterate through completed orders
-                    foreach (string soid in new List<string>(order.Keys))
+                    foreach (string soid in new List<string>(order))
                     {
                         
                         if (soid.Contains("QiChallenge10") == true)
@@ -124,14 +124,14 @@ namespace SkullCavernToggle
             {
                 // Normal
                 Game1.netWorldState.Value.SkullCavesDifficulty = 0;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal"));
 
             }
             else
             {
                 // Dangerous
                 Game1.netWorldState.Value.SkullCavesDifficulty = 1;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous"));
             }
 
             // Fix shrine appearance for new difficulty
@@ -161,14 +161,14 @@ namespace SkullCavernToggle
                     {
                         // Normal
                         Game1.netWorldState.Value.SkullCavesDifficulty = 0;
-                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal", null));
+                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal"));
 
                     }
                     else
                     {
                         // Dangerous
                         Game1.netWorldState.Value.SkullCavesDifficulty = 1;
-                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous", null));
+                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous"));
                     }
 
                     // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
@@ -269,11 +269,11 @@ namespace SkullCavernToggle
                 // Display message to say difficulty toggled, delay in changes means opposite conditions are used for display purposes
                 if(Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                 {
-                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to normal by {message.Player}", null));
+                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to normal by {message.Player}"));
                 }
                 else
                 {
-                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to dangerous by {message.Player}", null));
+                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to dangerous by {message.Player}"));
                 }
                 
                 // Update shrine tiles using opposite conditions
