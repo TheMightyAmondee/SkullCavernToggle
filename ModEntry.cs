@@ -124,14 +124,14 @@ namespace SkullCavernToggle
             {
                 // Normal
                 Game1.netWorldState.Value.SkullCavesDifficulty = 0;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal"));
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal") { noIcon = true});
 
             }
             else
             {
                 // Dangerous
                 Game1.netWorldState.Value.SkullCavesDifficulty = 1;
-                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous"));
+                Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous") { noIcon = true });
             }
 
             // Fix shrine appearance for new difficulty
@@ -161,14 +161,14 @@ namespace SkullCavernToggle
                     {
                         // Normal
                         Game1.netWorldState.Value.SkullCavesDifficulty = 0;
-                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal"));
+                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to normal") { noIcon = true });
 
                     }
                     else
                     {
                         // Dangerous
                         Game1.netWorldState.Value.SkullCavesDifficulty = 1;
-                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous"));
+                        Game1.addHUDMessage(new HUDMessage("Skull Cavern toggled to dangerous") { noIcon = true });
                     }
 
                     // Log new difficulty, difficulty will update after the clock ticks in multiplayer (10 in-game minutes)
@@ -221,7 +221,7 @@ namespace SkullCavernToggle
                         TileY = Game1.player.Tile.Y - 2;
                     }
 
-                    else if (Game1.player.FacingDirection == 3 && Game1.player.Tile.X == 3 && Game1.player.Tile.Y == 4)
+                    else if(Game1.player.FacingDirection == 3 && Game1.player.Tile.X == 3 && Game1.player.Tile.Y == 4)
                     {
                         TileX = Game1.player.Tile.X - 1;
                         TileY = Game1.player.Tile.Y - 1;
@@ -285,11 +285,11 @@ namespace SkullCavernToggle
                 // Display message to say difficulty toggled, delay in changes means opposite conditions are used for display purposes
                 if(Game1.netWorldState.Value.SkullCavesDifficulty > 0)
                 {
-                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to normal by {message.Player}"));
+                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to normal by {message.Player}") { noIcon = true });
                 }
                 else
                 {
-                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to dangerous by {message.Player}"));
+                    Game1.addHUDMessage(new HUDMessage($"Skull Cavern difficulty toggled to dangerous by {message.Player}") { noIcon = true });
                 }
                 
                 // Update shrine tiles using opposite conditions

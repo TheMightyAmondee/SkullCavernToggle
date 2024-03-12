@@ -67,8 +67,7 @@ namespace SkullCavernToggle
             frontlayer.Tiles[2, 3] = new StaticTile(frontlayer, tilesheet, BlendMode.Alpha, 16);
             buildingslayer.Tiles[2, 4] = new StaticTile(buildingslayer, tilesheet, BlendMode.Alpha, 32);
 
-            // Apply properties to tiles
-            
+            // Apply properties to tiles            
             location.setTileProperty(2, 3, "Buildings", "Action", "SnakeShrine");
             location.setTileProperty(2, 4, "Buildings", "Action", "SnakeShrine");
         }
