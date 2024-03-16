@@ -19,6 +19,7 @@ namespace SkullCavernToggle
             helper.Events.Input.ButtonPressed += this.Toggle;
             helper.Events.Player.Warped += this.OnWarp;
             helper.Events.Multiplayer.ModMessageReceived += this.MessageReceived;
+            helper.Events.GameLoop.DayStarted += this.DayStarted;
 
             this.config = helper.ReadConfig<ModConfig>();
         }
@@ -34,6 +35,18 @@ namespace SkullCavernToggle
             }
         }
 
+        // Fix conflicting shrines
+        private void DayStarted(object sender, DayStartedEventArgs e)
+        {
+            if (Game1.netWorldState.Value.SkullCavesDifficulty > 1)
+            {
+                Game1.netWorldState.Value.SkullCavesDifficulty = 1;
+            }
+            else if (Game1.netWorldState.Value.SkullCavesDifficulty < 0)
+            {
+                Game1.netWorldState.Value.SkullCavesDifficulty = 0;
+            }
+        }
 
         // Are the toggle conditions met?
         private bool ShouldToggle()
