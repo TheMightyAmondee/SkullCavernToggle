@@ -5,6 +5,6 @@
 	"Description": "Toggles Skull Cavern difficulty",
 	"UniqueID": "TheMightyAmondee.SkullCavernToggle",
 	"EntryDll": "SkullCavernToggle.dll",
-	"MinimumApiVersion": "4.0.0",
+	"MinimumApiVersion": "4.1.0",
 	"UpdateKeys": [ "Nexus:7908" ]
 }
