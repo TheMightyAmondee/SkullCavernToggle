@@ -18,7 +18,7 @@ If you prefer the original approach (using a hotkey to toggle the difficulty), t
 
 **Some things to note:**
 
-- This mod requires SMAPI 3.14 or above to be installed. Older versions will work with SMAPI 3.9 or above.
+- This mod requires SMAPI 4.1 or above to be installed. Older versions will work with SMAPI 3.9 or above.
 
 - The change is immediate (usually, see note below), and applies to everyone in multiplayer
 
@@ -33,3 +33,10 @@ If you prefer the original approach (using a hotkey to toggle the difficulty), t
 - Introduced the Shrine of Greater Challenge to toggle the difficulty of the caverns if ShrineToggle is true in the config
 - Added new config options
 - Players in multiplayer now informed when the difficulty changes
+
+**Version 1.2.0**
+- Updated for 1.6
+- Improve controller friendliness
+
+**Version 1.2.1**
+- Updated for 1.6.9
