@@ -9,6 +9,6 @@ namespace SkullCavernToggle
 {
     public class Multiplayer
     {
-        public string Player { get; set; } = Game1.player.name;
+        public string Player { get; set; } = Game1.player.Name;
     }
 }
